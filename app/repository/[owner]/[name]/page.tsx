@@ -7,12 +7,14 @@ import { ErrorMessage } from "@/components/ErrorMessage"
 import ReactMarkdown from "react-markdown"
 import RepositoryDetails from "@/components/RepositoryDetails"
 
-export default async function RepositoryDetail({ params }: { params: { owner: string; name: string } }) {
+export default async function RepositoryPage({ params }: { params: { owner: string; name: string } }) {
+  const { owner, name } = await Promise.resolve(params);
+
   try {
     const [repo, readmeData, contributors] = await Promise.all([
-      getRepository(params.owner, params.name),
-      getReadme(params.owner, params.name),
-      getContributors(params.owner, params.name),
+      getRepository(owner, name),
+      getReadme(owner, name),
+      getContributors(owner, name),
     ])
 
     return (
@@ -34,14 +36,14 @@ export default async function RepositoryDetail({ params }: { params: { owner: st
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="mb-8">
             <CardHeader>
               <CardTitle>Contributors</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-6 p-4">
                 {contributors.slice(0, 10).map((contributor) => (
-                  <div key={contributor.login} className="flex items-center gap-2">
+                  <div key={contributor.login} className="flex items-center gap-2 p-2 rounded-lg hover:bg-accent">
                     <Image
                       src={contributor.avatar_url || "/placeholder.svg"}
                       alt={contributor.login}

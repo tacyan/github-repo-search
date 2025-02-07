@@ -23,11 +23,11 @@ export default function RepositoryList({
   order,
 }: RepositoryListProps) {
   return (
-    <div>
+    <div className="flex flex-col space-y-6">
       <p className="mb-4" aria-live="polite">
         Total results: {totalCount}
       </p>
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" role="list">
+      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-8" role="list">
         {repositories.map((repo) => (
           <li key={repo.id}>
             <Card>
@@ -52,7 +52,9 @@ export default function RepositoryList({
           </li>
         ))}
       </ul>
-      <Pagination totalCount={totalCount} currentPage={currentPage} query={query} sort={sort} order={order} />
+      <div className="mt-auto py-8">
+        <Pagination totalCount={totalCount} currentPage={currentPage} query={query} sort={sort} order={order} />
+      </div>
     </div>
   )
 }

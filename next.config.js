@@ -1,6 +1,13 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["avatars.githubusercontent.com"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.githubusercontent.com',
+      },
+      // 必要に応じて他のパターンを追加
+    ],
   },
 }
 

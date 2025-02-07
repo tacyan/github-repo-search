@@ -16,12 +16,32 @@ export default async function SearchResults({
 }: {
   searchParams: { q?: string; sort?: string; page?: string }
 }) {
-  const query = searchParams.q || '';
-  const sort = searchParams.sort || '';
-  const page = Number(searchParams.page) || 1;
+  // Step 1: searchParamsを非同期で安全に処理する関数
+  const getSearchParamsValue = async (key: keyof typeof searchParams) => {
+    // 非同期コンテキストを確保
+    const params = await (async () => searchParams)();
+    return params[key];
+  };
+
+  // Step 2: パラメータを並行して取得
+  const [rawQuery, rawSort, rawPage] = await Promise.all([
+    getSearchParamsValue('q'),
+    getSearchParamsValue('sort'),
+    getSearchParamsValue('page'),
+  ]);
+
+  // Step 3: 取得した値を適切な型に変換
+  const query = String(rawQuery ?? '');
+  const sort = String(rawSort ?? '');
+  const page = Number(rawPage ?? 1);
 
   try {
-    const { items, total_count } = await searchRepositories(query, page, sort, 'desc')
+    const { items, total_count } = await searchRepositories(
+      query,
+      page,
+      sort,
+      'desc'
+    )
 
     return (
       <div className="flex flex-col min-h-screen">
@@ -56,6 +76,7 @@ export default async function SearchResults({
       </div>
     )
   } catch (error) {
+    console.error('Error fetching repositories:', error)
     return (
       <div className="flex flex-col min-h-screen">
         <Header />
