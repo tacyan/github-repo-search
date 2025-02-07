@@ -26,7 +26,7 @@ export function SearchForm({ initialQuery }: SearchFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
+    <form onSubmit={handleSubmit} className="flex gap-2" data-testid="search-form">
       <Input
         type="search"
         placeholder="Search repositories..."

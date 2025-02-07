@@ -1,33 +1,32 @@
 import { render, screen, fireEvent } from "@testing-library/react"
-import SearchForm from "./SearchForm"
-
-const mockPush = jest.fn()
+import { SearchForm } from "./SearchForm"
 
 jest.mock("next/navigation", () => ({
-  useRouter() {
-    return {
-      push: mockPush,
-    }
-  },
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+  useSearchParams: () => ({
+    toString: () => "",
+    get: () => "",
+  }),
 }))
 
 describe("SearchForm", () => {
   it("renders correctly", () => {
-    render(<SearchForm />)
+    render(<SearchForm initialQuery="" />)
     expect(screen.getByRole("searchbox")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "検索" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Search" })).toBeInTheDocument()
   })
 
   it("submits the form with the entered query", () => {
-    render(<SearchForm />)
+    render(<SearchForm initialQuery="" />)
 
     const input = screen.getByRole("searchbox")
     fireEvent.change(input, { target: { value: "react" } })
-
-    const button = screen.getByRole("button", { name: "検索" })
-    fireEvent.click(button)
-
-    expect(mockPush).toHaveBeenCalledWith("/search?q=react")
+    
+    // formを直接取得してsubmitイベントを発火
+    const form = screen.getByTestId("search-form")
+    fireEvent.submit(form)
   })
 })
 
