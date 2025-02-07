@@ -60,6 +60,36 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     const serializedItems = JSON.parse(JSON.stringify(items))
     const serializedTotalCount = JSON.parse(JSON.stringify(total_count))
 
+    const handlePagination = () => {
+      if (serializedTotalCount > 1000) {
+        // 最大ページ数を10に制限（1ページ100件として）
+        const maxPages = 10;
+        setTotalPages(maxPages);
+        
+        // ユーザーへの通知メッセージを表示
+        setNotification({
+          type: 'info',
+          message: '検索結果が1000件を超えています。より具体的な検索条件を使用することをお勧めします。'
+        });
+      }
+    };
+    
+    // 検索条件の提案を表示するコンポーネント
+    const SearchSuggestions = () => {
+      if (serializedTotalCount <= 1000) return null;
+      
+      return (
+        <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900 rounded-lg max-w-2xl">
+          <h3 className="font-bold mb-2">検索結果を絞り込むためのヒント：</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>言語を指定: language:javascript</li>
+            <li>スター数で絞り込み: stars:>1000</li>
+            <li>より具体的なキーワードを使用</li>
+          </ul>
+        </div>
+      );
+    };
+
     return (
       <div className="flex flex-col min-h-screen">
         <Header />
@@ -89,6 +119,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             sort={sort}
             order={order}
           />
+          <div className="mb-16">
+            <SearchSuggestions />
+          </div>
         </main>
         <Footer />
       </div>
