@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { StarIcon } from "lucide-react"
+import { Star } from "lucide-react"
 import type { Repository } from "@/types/github"
 import Pagination from "./Pagination"
 
@@ -43,7 +43,7 @@ export default function RepositoryList({
                 <div className="flex items-center gap-2 flex-wrap">
                   <Badge variant="secondary">{repo.language}</Badge>
                   <div className="flex items-center">
-                    <StarIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+                    <Star className="w-4 h-4 mr-1" aria-hidden="true" />
                     <span aria-label={`${repo.stargazers_count} stars`}>{repo.stargazers_count}</span>
                   </div>
                 </div>

@@ -1,6 +1,46 @@
 import { render, screen } from "@testing-library/react"
 import RepositoryList from "./RepositoryList"
 
+// Lucideアイコンのモック
+jest.mock('lucide-react', () => ({
+  Star: () => <div data-testid="star-icon" />,
+  ChevronDown: () => <div data-testid="chevron-down-icon" />,
+  ChevronUp: () => <div data-testid="chevron-up-icon" />,
+  ChevronLeft: () => <div data-testid="chevron-left-icon" />,
+  ChevronRight: () => <div data-testid="chevron-right-icon" />,
+}))
+
+// Next.jsの機能をモック
+jest.mock('next/link', () => {
+  return ({ children, href }) => <a href={href}>{children}</a>
+})
+
+// UIコンポーネントのモック
+jest.mock("@/components/ui/badge", () => ({
+  Badge: ({ children, variant }) => (
+    <div data-testid="badge" data-variant={variant}>{children}</div>
+  ),
+}))
+
+jest.mock("@/components/ui/card", () => ({
+  Card: ({ children }) => <div data-testid="card">{children}</div>,
+  CardHeader: ({ children }) => <div data-testid="card-header">{children}</div>,
+  CardContent: ({ children }) => <div data-testid="card-content">{children}</div>,
+  CardTitle: ({ children, className }) => (
+    <div data-testid="card-title" className={className}>{children}</div>
+  ),
+}))
+
+// Paginationコンポーネントのモック
+jest.mock("./Pagination", () => ({
+  __esModule: true,
+  default: ({ totalCount, currentPage, query }) => (
+    <div data-testid="pagination">
+      Pagination: {totalCount} {currentPage} {query}
+    </div>
+  ),
+}))
+
 const mockRepositories = [
   {
     id: 1,
@@ -32,7 +72,16 @@ const mockRepositories = [
 
 describe("RepositoryList", () => {
   it("renders correctly", () => {
-    render(<RepositoryList repositories={mockRepositories} totalCount={2} currentPage={1} query="test" />)
+    render(
+      <RepositoryList 
+        repositories={mockRepositories} 
+        totalCount={2} 
+        currentPage={1} 
+        query="test"
+        sort=""
+        order="desc"
+      />
+    )
 
     expect(screen.getByText("Total results: 2")).toBeInTheDocument()
     expect(screen.getByText("repo1")).toBeInTheDocument()
