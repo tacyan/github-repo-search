@@ -37,36 +37,36 @@
 
 まず、このリポジトリをローカルマシンにクローンします。
 
-\`\`\`bash
+```bash
 git clone https://github.com/tacyan/github-repo-search.git
 cd github-repo-search
-\`\`\`
+```
 
 ### 2. 依存関係のインストール
 
 プロジェクトディレクトリで以下のコマンドを実行し、必要な依存関係をインストールします。
 
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
 ### 3. 環境変数の設定
 
-プロジェクトのルートディレクトリに \`.env.local\` ファイルを作成し、以下の内容を追加します。
+プロジェクトのルートディレクトリに `.env.local` ファイルを作成し、以下の内容を追加します。
 
-\`\`\`
+```
 NEXT_PUBLIC_GITHUB_API_URL=https://api.github.com
-\`\`\`
+```
 
 ### 4. アプリケーションの起動
 
 開発サーバーを起動するには、以下のコマンドを実行します。
 
-\`\`\`bash
+```bash
 npm run dev
-\`\`\`
+```
 
-ブラウザで \`http://localhost:3000\` を開くと、アプリケーションが表示されます。
+ブラウザで `http://localhost:3000` を開くと、アプリケーションが表示されます。
 
 ## 使い方
 
@@ -79,7 +79,7 @@ npm run dev
 
 ## プロジェクト構造
 
-\`\`\`
+```
 github-repo-search/
 ├── app/
 │   ├── layout.tsx
@@ -112,7 +112,7 @@ github-repo-search/
 ├── package.json
 ├── README.md
 └── tsconfig.json
-\`\`\`
+```
 
 ## こだわりポイント
 
