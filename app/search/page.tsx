@@ -4,6 +4,8 @@ import { Footer } from "@/components/Footer"
 import { ErrorMessage } from "@/components/ErrorMessage"
 import dynamic from "next/dynamic"
 import { ClientSortComponent } from "../components/ClientSortComponent"
+import SearchForm from "@/components/SearchForm"
+import SortOptions from "@/components/SortOptions"
 
 const RepositoryList = dynamic(() => import("@/components/RepositoryList"), {
   loading: () => <p>Loading...</p>,
@@ -12,34 +14,42 @@ const RepositoryList = dynamic(() => import("@/components/RepositoryList"), {
 export default async function SearchResults({
   searchParams,
 }: {
-  searchParams: { q: string; page?: string; sort?: string; order?: "asc" | "desc" }
+  searchParams: { q?: string; sort?: string; page?: string }
 }) {
-  const { q, page: pageStr = "1", sort = "", order = "desc" } = await searchParams
-  
-  const page = Number.parseInt(pageStr, 10)
+  const query = searchParams.q || '';
+  const sort = searchParams.sort || '';
+  const page = Number(searchParams.page) || 1;
 
   try {
-    const { items, total_count } = await searchRepositories(q, page, sort, order)
+    const { items, total_count } = await searchRepositories(query, page, sort, 'desc')
 
     return (
       <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-grow container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-8">Search Results for &quot;{q}&quot;</h1>
-          <div className="mb-4">
-            <ClientSortComponent 
-              defaultSort={sort} 
-              defaultOrder={order} 
-              searchParams={searchParams}
-            />
+          <h1 className="sr-only">GitHub Repository Search Results</h1>
+          
+          <div className="mb-8">
+            <SearchForm initialQuery={query} />
           </div>
+
+          {query && (
+            <h2 className="text-2xl font-bold mb-6">
+              Search Results for "{query}"
+            </h2>
+          )}
+
+          <div className="mb-6">
+            <SortOptions currentSort={sort} />
+          </div>
+
           <RepositoryList
             repositories={items}
             totalCount={total_count}
             currentPage={page}
-            query={q}
+            query={query}
             sort={sort}
-            order={order}
+            order="desc"
           />
         </main>
         <Footer />
