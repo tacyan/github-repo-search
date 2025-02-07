@@ -1,9 +1,12 @@
+"use client"
+
 import Link from "next/link"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Star } from "lucide-react"
 import type { Repository } from "@/types/github"
-import Pagination from "./Pagination"
+import { Pagination } from "@/components/Pagination"
+import { useRouter } from "next/navigation"
 
 interface RepositoryListProps {
   repositories: Repository[]
@@ -14,14 +17,21 @@ interface RepositoryListProps {
   order: "asc" | "desc"
 }
 
-export default function RepositoryList({
-  repositories,
-  totalCount,
-  currentPage,
-  query,
-  sort,
-  order,
-}: RepositoryListProps) {
+export function RepositoryList({ repositories, totalCount, currentPage, query, sort, order }: RepositoryListProps) {
+  const router = useRouter()
+
+  const handlePageChange = (page: number) => {
+    const searchParams = new URLSearchParams({
+      q: query,
+      page: page.toString(),
+      sort: sort,
+      order: order,
+    })
+    router.push(`/search?${searchParams.toString()}`)
+  }
+
+  const totalPages = Math.ceil(totalCount / 30) // GitHub API returns 30 items per page
+
   return (
     <div className="flex flex-col space-y-6">
       <p className="mb-4" aria-live="polite">
@@ -53,7 +63,15 @@ export default function RepositoryList({
         ))}
       </ul>
       <div className="mt-auto py-8">
-        <Pagination totalCount={totalCount} currentPage={currentPage} query={query} sort={sort} order={order} />
+        <Pagination 
+          totalCount={totalCount} 
+          currentPage={currentPage} 
+          query={query} 
+          sort={sort} 
+          order={order}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   )

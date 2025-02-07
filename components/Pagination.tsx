@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -9,16 +11,45 @@ interface PaginationProps {
   query: string
   sort: string
   order: "asc" | "desc"
+  totalPages: number
+  onPageChange: (page: number) => void
 }
 
-export default function Pagination({ totalCount, currentPage, query, sort, order }: PaginationProps) {
-  const totalPages = Math.ceil(totalCount / 30) // GitHub API returns 30 items per page
+export function Pagination({ totalCount, currentPage, query, sort, order, totalPages, onPageChange }: PaginationProps) {
   const maxPages = Math.min(totalPages, 34) // GitHub API limits to 1000 results (about 34 pages)
 
-  const pageNumbers = Array.from({ length: maxPages }, (_, i) => i + 1)
-  const visiblePageNumbers = pageNumbers.filter(
-    (num) => num === 1 || num === maxPages || (num >= currentPage - 1 && num <= currentPage + 1),
-  )
+  const getPageNumbers = () => {
+    const delta = 5 // 前後に表示するページ数
+    const range = []
+    const rangeWithDots = []
+
+    // 範囲の開始と終了を計算
+    let start = Math.max(2, currentPage - delta)
+    let end = Math.min(totalPages - 1, currentPage + delta)
+
+    // 最初のページは常に表示
+    if (start > 2) {
+      rangeWithDots.push(1)
+      if (start > 3) {
+        rangeWithDots.push('...')
+      }
+    }
+
+    // ページ番号を生成
+    for (let i = start; i <= end; i++) {
+      rangeWithDots.push(i)
+    }
+
+    // 最後のページ番号の処理
+    if (end < totalPages - 1) {
+      if (end < totalPages - 2) {
+        rangeWithDots.push('...')
+      }
+      rangeWithDots.push(totalPages)
+    }
+
+    return rangeWithDots
+  }
 
   const getPageUrl = (page: number) => {
     let url = `/search?q=${query}&page=${page}`
@@ -28,29 +59,44 @@ export default function Pagination({ totalCount, currentPage, query, sort, order
     return url
   }
 
+  if (totalPages <= 1) return null
+
   return (
-    <nav className="flex justify-center items-center mt-8 gap-2" aria-label="Pagination">
-      <Button variant="outline" size="icon" disabled={currentPage === 1} aria-label="Previous page" asChild>
-        <Link href={getPageUrl(currentPage - 1)}>
-          <ChevronLeft className="h-4 w-4" />
-        </Link>
+    <nav className="flex justify-center items-center gap-2 my-8" aria-label="ページナビゲーション">
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        aria-label="前のページ"
+      >
+        <ChevronLeft className="h-4 w-4" />
       </Button>
-      {visiblePageNumbers.map((page, index, array) => (
-        <React.Fragment key={page}>
-          {index > 0 && array[index - 1] !== page - 1 && <span className="px-2">...</span>}
+
+      {getPageNumbers().map((pageNumber, index) => (
+        pageNumber === '...' ? (
+          <span key={`dots-${index}`} className="px-2">...</span>
+        ) : (
           <Button
-            variant={currentPage === page ? "default" : "outline"}
-            aria-current={currentPage === page ? "page" : undefined}
-            asChild
+            key={pageNumber}
+            variant={currentPage === pageNumber ? "default" : "outline"}
+            onClick={() => onPageChange(Number(pageNumber))}
+            aria-label={`ページ ${pageNumber}`}
+            aria-current={currentPage === pageNumber ? "page" : undefined}
           >
-            <Link href={getPageUrl(page)}>{page}</Link>
+            {pageNumber}
           </Button>
-        </React.Fragment>
+        )
       ))}
-      <Button variant="outline" size="icon" disabled={currentPage === maxPages} aria-label="Next page" asChild>
-        <Link href={getPageUrl(currentPage + 1)}>
-          <ChevronRight className="h-4 w-4" />
-        </Link>
+
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        aria-label="次のページ"
+      >
+        <ChevronRight className="h-4 w-4" />
       </Button>
     </nav>
   )

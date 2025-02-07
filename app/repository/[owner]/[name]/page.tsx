@@ -1,11 +1,13 @@
 import { getRepository, getReadme, getContributors } from "@/lib/github"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import Image from "next/image"
 import { ErrorMessage } from "@/components/ErrorMessage"
-import ReactMarkdown from "react-markdown"
-import RepositoryDetails from "@/components/RepositoryDetails"
+import { MarkdownContent } from "@/components/MarkdownContent"
+import { RepositoryDetails } from "@/components/RepositoryDetails"
+import { CardWrapper } from "@/components/CardWrapper"
+import { ContributorCard } from "@/components/ContributorCard"
+import type { Repository } from "@/types/github"
 
 export default async function RepositoryPage({ params }: { params: { owner: string; name: string } }) {
   const { owner, name } = await Promise.resolve(params);
@@ -17,47 +19,35 @@ export default async function RepositoryPage({ params }: { params: { owner: stri
       getContributors(owner, name),
     ])
 
+    // すべてのデータをシリアライズ
+    const serializedRepo: Repository = JSON.parse(JSON.stringify(repo))
+    const serializedReadme = JSON.parse(JSON.stringify(readmeData))
+    const serializedContributors = JSON.parse(JSON.stringify(contributors))
+
     return (
       <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-grow container mx-auto px-4 py-8">
-          <RepositoryDetails repository={repo} />
+          <RepositoryDetails repository={serializedRepo} />
 
-          <Card className="mb-8 mt-8">
-            <CardHeader>
-              <CardTitle>README</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="container mx-auto px-4 pb-20">
-                <div className="prose prose-sm max-w-none overflow-x-auto">
-                  <ReactMarkdown>{readmeData.content}</ReactMarkdown>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <CardWrapper title="README" className="mb-8 mt-8">
+            <div className="container mx-auto px-4 pb-20">
+              <MarkdownContent content={serializedReadme.content} />
+            </div>
+          </CardWrapper>
 
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Contributors</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-6 p-4">
-                {contributors.slice(0, 10).map((contributor) => (
-                  <div key={contributor.login} className="flex items-center gap-2 p-2 rounded-lg hover:bg-accent">
-                    <Image
-                      src={contributor.avatar_url || "/placeholder.svg"}
-                      alt={contributor.login}
-                      width={32}
-                      height={32}
-                      className="rounded-full"
-                    />
-                    <span>{contributor.login}</span>
-                    <span className="text-gray-500">({contributor.contributions})</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <CardWrapper title="Contributors" className="mb-8">
+            <div className="flex flex-wrap gap-6 p-4">
+              {serializedContributors.slice(0, 10).map((contributor) => (
+                <ContributorCard
+                  key={contributor.login}
+                  login={contributor.login}
+                  avatar_url={contributor.avatar_url}
+                  contributions={contributor.contributions}
+                />
+              ))}
+            </div>
+          </CardWrapper>
         </main>
         <Footer />
       </div>

@@ -2,38 +2,41 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 interface SearchFormProps {
-  initialQuery?: string;
+  initialQuery: string
 }
 
-export default function SearchForm({ initialQuery = '' }: SearchFormProps) {
-  const router = useRouter()
+export function SearchForm({ initialQuery }: SearchFormProps) {
   const [query, setQuery] = useState(initialQuery)
+  const router = useRouter()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (query.trim()) {
-      router.push(`/search?q=${encodeURIComponent(query.trim())}`)
-    }
+    if (!query.trim()) return
+
+    const searchParams = new URLSearchParams({
+      q: query,
+      sort: "stars",
+      order: "desc",
+    })
+    router.push(`/search?${searchParams.toString()}`)
   }
 
   return (
-    <div className="flex justify-center w-full">
-      <form onSubmit={handleSubmit} className="flex gap-2 w-full max-w-2xl" role="search">
-        <Input
-          type="search"
-          placeholder="リポジトリを検索..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="flex-grow"
-          aria-label="リポジトリ検索"
-        />
-        <Button type="submit">検索</Button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} className="flex gap-2">
+      <Input
+        type="search"
+        placeholder="Search repositories..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="flex-1"
+        aria-label="Search repositories"
+      />
+      <Button type="submit">Search</Button>
+    </form>
   )
 }
 
