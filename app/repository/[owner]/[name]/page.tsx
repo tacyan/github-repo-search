@@ -26,8 +26,10 @@ export default async function RepositoryDetail({ params }: { params: { owner: st
               <CardTitle>README</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="prose dark:prose-invert max-w-none">
-                <ReactMarkdown>{readmeData.content}</ReactMarkdown>
+              <div className="container mx-auto px-4 pb-20">
+                <div className="prose prose-sm max-w-none overflow-x-auto">
+                  <ReactMarkdown>{readmeData.content}</ReactMarkdown>
+                </div>
               </div>
             </CardContent>
           </Card>
