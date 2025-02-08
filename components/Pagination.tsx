@@ -62,43 +62,45 @@ export function Pagination({ totalCount, currentPage, query, sort, order, totalP
   if (totalPages <= 1) return null
 
   return (
-    <nav className="flex justify-center items-center gap-2 my-8" aria-label="ページナビゲーション">
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => onPageChangeAction(currentPage - 1)}
-        disabled={currentPage === 1}
-        aria-label="前のページ"
-      >
-        <ChevronLeft className="h-4 w-4" />
-      </Button>
+    <div className="flex justify-center my-8">
+      <nav className="flex justify-center items-center gap-2" aria-label="ページナビゲーション">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => onPageChangeAction(currentPage - 1)}
+          disabled={currentPage === 1}
+          aria-label="前のページ"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
 
-      {getPageNumbers().map((pageNumber, index) => (
-        pageNumber === '...' ? (
-          <span key={`dots-${index}`} className="px-2">...</span>
-        ) : (
-          <Button
-            key={pageNumber}
-            variant={currentPage === pageNumber ? "default" : "outline"}
-            onClick={() => onPageChangeAction(Number(pageNumber))}
-            aria-label={`ページ ${pageNumber}`}
-            aria-current={currentPage === pageNumber ? "page" : undefined}
-          >
-            {pageNumber}
-          </Button>
-        )
-      ))}
+        {getPageNumbers().map((pageNumber, index) => (
+          pageNumber === '...' ? (
+            <span key={`dots-${index}`} className="px-2">...</span>
+          ) : (
+            <Button
+              key={pageNumber}
+              variant={currentPage === pageNumber ? "default" : "outline"}
+              onClick={() => onPageChangeAction(Number(pageNumber))}
+              aria-label={`ページ ${pageNumber}`}
+              aria-current={currentPage === pageNumber ? "page" : undefined}
+            >
+              {pageNumber}
+            </Button>
+          )
+        ))}
 
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => onPageChangeAction(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        aria-label="次のページ"
-      >
-        <ChevronRight className="h-4 w-4" />
-      </Button>
-    </nav>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => onPageChangeAction(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          aria-label="次のページ"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </nav>
+    </div>
   )
 }
 
