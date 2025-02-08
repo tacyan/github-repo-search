@@ -69,12 +69,6 @@ export function SearchForm({ initialQuery = "", isSearchPage = false }: SearchFo
 
   const updateQuery = (newQuery: string) => {
     setQuery(newQuery)
-    if (isSearchPage && newQuery !== query) {
-      const debounceTimer = setTimeout(() => {
-        executeSearch(newQuery)
-      }, 500)
-      return () => clearTimeout(debounceTimer)
-    }
   }
 
   return (
@@ -94,11 +88,11 @@ export function SearchForm({ initialQuery = "", isSearchPage = false }: SearchFo
       </form>
 
       {!isSearchPage && showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg">
+        <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg dark:bg-gray-800 dark:text-white">
           {suggestions.map((suggestion, index) => (
             <button
               key={index}
-              className="w-full px-4 py-2 text-left hover:bg-gray-100"
+              className="w-full px-4 py-2 text-left text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               onClick={() => {
                 updateQuery(suggestion)
                 setShowSuggestions(false)

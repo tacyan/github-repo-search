@@ -28,7 +28,12 @@ export async function searchRepositories(
   })
 
   if (!res.ok) {
-    throw new Error("Failed to fetch repositories")
+    if (res.status === 403) {
+      // レート制限に達した場合は、エラーログを出さずに空の検索結果を返す
+      return { total_count: 0, items: [] }
+    }
+    console.error("Failed to fetch repositories", res.status, res.statusText)
+    return { total_count: 0, items: [] }
   }
 
   return res.json()
@@ -111,15 +116,19 @@ export async function getSearchSuggestions(query: string): Promise<string[]> {
     }
 
     const res = await fetch(
-      `${GITHUB_API_URL}/search/repositories?q=${encodeURIComponent(query)}&per_page=5`,
+      `${GITHUB_API_URL}/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=5`,
       {
         headers,
       }
     );
 
     if (!res.ok) {
+      if (res.status === 403) {
+         // レート制限に達した場合は、エラーログを出さずに空の配列を返す
+         return [];
+      }
       console.error('GitHub API error:', res.status, res.statusText);
-      return []; // エラー時は空の配列を返す
+      return [];
     }
 
     const data = await res.json();
