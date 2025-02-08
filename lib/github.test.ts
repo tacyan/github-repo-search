@@ -1,7 +1,8 @@
 import { searchRepositories, getRepository } from "./github"
 import { jest } from "@jest/globals"
 
-global.fetch = jest.fn()
+const mockFetch = jest.fn() as unknown as jest.MockedFunction<typeof fetch>
+global.fetch = mockFetch
 
 describe("GitHub API functions", () => {
   beforeEach(() => {
@@ -14,10 +15,10 @@ describe("GitHub API functions", () => {
         total_count: 1,
         items: [{ id: 1, name: "test-repo" }],
       }
-      ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockResponse,
-      })
+      } as Response)
 
       const result = await searchRepositories("test", 1)
       expect(result).toEqual(mockResponse)
@@ -28,9 +29,9 @@ describe("GitHub API functions", () => {
     })
 
     it("should throw an error when fetch fails", async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
-      })
+      } as Response)
 
       await expect(searchRepositories("test", 1)).rejects.toThrow("Failed to fetch repositories")
     })
@@ -39,10 +40,10 @@ describe("GitHub API functions", () => {
   describe("getRepository", () => {
     it("should fetch repository details successfully", async () => {
       const mockResponse = { id: 1, name: "test-repo", owner: { login: "test-user" } }
-      ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockResponse,
-      })
+      } as Response)
 
       const result = await getRepository("test-user", "test-repo")
       expect(result).toEqual(mockResponse)
@@ -50,9 +51,9 @@ describe("GitHub API functions", () => {
     })
 
     it("should throw an error when fetch fails", async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
-      })
+      } as Response)
 
       await expect(getRepository("test-user", "test-repo")).rejects.toThrow("Failed to fetch repository details")
     })

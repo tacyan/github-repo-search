@@ -1,7 +1,14 @@
 'use client'
 
-export function SelectWrapper({ onValueChange, ...props }) {
+import { Select } from "@/components/ui/select"
+
+interface SelectWrapperProps {
+  onValueChangeAction: (value: string) => Promise<void>;
+  [key: string]: any;
+}
+
+export function SelectWrapper({ onValueChangeAction, ...props }: SelectWrapperProps) {
   return (
-    <Select onValueChange={onValueChange} {...props} />
+    <Select onValueChange={onValueChangeAction} {...props} />
   )
 } 

@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react"
 import { RepositoryList } from "./RepositoryList"
+import { ReactNode } from "react"
 
 // Lucideアイコンのモック
 jest.mock('lucide-react', () => ({
@@ -12,28 +13,34 @@ jest.mock('lucide-react', () => ({
 
 // Next.jsの機能をモック
 jest.mock('next/link', () => {
-  return ({ children, href }) => <a href={href}>{children}</a>
+  return ({ children, href }: { children: ReactNode; href: string }) => (
+    <a href={href}>{children}</a>
+  )
 })
 
 // UIコンポーネントのモック
 jest.mock("@/components/ui/badge", () => ({
-  Badge: ({ children, variant }) => (
+  Badge: ({ children, variant }: { children: ReactNode; variant?: string }) => (
     <div data-testid="badge" data-variant={variant}>{children}</div>
   ),
 }))
 
 jest.mock("@/components/ui/card", () => ({
-  Card: ({ children }) => <div data-testid="card">{children}</div>,
-  CardHeader: ({ children }) => <div data-testid="card-header">{children}</div>,
-  CardContent: ({ children }) => <div data-testid="card-content">{children}</div>,
-  CardTitle: ({ children, className }) => (
+  Card: ({ children }: { children: ReactNode }) => <div data-testid="card">{children}</div>,
+  CardHeader: ({ children }: { children: ReactNode }) => <div data-testid="card-header">{children}</div>,
+  CardContent: ({ children }: { children: ReactNode }) => <div data-testid="card-content">{children}</div>,
+  CardTitle: ({ children, className }: { children: ReactNode; className?: string }) => (
     <div data-testid="card-title" className={className}>{children}</div>
   ),
 }))
 
 // Paginationコンポーネントのモック
 jest.mock("./Pagination", () => ({
-  Pagination: ({ totalCount, currentPage, query }) => (
+  Pagination: ({ totalCount, currentPage, query }: { 
+    totalCount: number; 
+    currentPage: number; 
+    query: string 
+  }) => (
     <div data-testid="pagination">
       Pagination: {totalCount} {currentPage} {query}
     </div>
@@ -44,9 +51,13 @@ const mockRepositories = [
   {
     id: 1,
     name: "repo1",
+    full_name: "user/repo1",
     description: "description1",
     html_url: "https://github.com/user/repo1",
     stargazers_count: 100,
+    watchers_count: 100,
+    forks_count: 50,
+    open_issues_count: 10,
     language: "TypeScript",
     owner: {
       login: "user",
@@ -56,9 +67,13 @@ const mockRepositories = [
   {
     id: 2,
     name: "repo2",
+    full_name: "user/repo2",
     description: "description2",
     html_url: "https://github.com/user/repo2",
     stargazers_count: 200,
+    watchers_count: 200,
+    forks_count: 100,
+    open_issues_count: 20,
     language: "JavaScript",
     owner: {
       login: "user",
