@@ -99,12 +99,23 @@ github-repo-search/
 │           └── [name]/
 │               └── page.tsx
 ├── components/
+│   ├── ui/
+│   │   ├── button.tsx
+│   │   ├── dropdown-menu.tsx
+│   │   ├── input.tsx
+│   │   ├── label.tsx
+│   │   ├── select.tsx
+│   │   ├── separator.tsx
+│   │   ├── skeleton.tsx
+│   │   ├── table.tsx
+│   │   └── toast.tsx
 │   ├── ErrorMessage.tsx
 │   ├── Footer.tsx
 │   ├── Header.tsx
 │   ├── LoadingSpinner.tsx
 │   ├── ModeToggle.tsx
 │   ├── Pagination.tsx
+│   ├── RepositoryCard.tsx
 │   ├── RepositoryDetails.tsx
 │   ├── RepositoryList.tsx
 │   ├── SearchForm.tsx
@@ -112,12 +123,16 @@ github-repo-search/
 │   ├── SortOptions.tsx
 │   └── theme-provider.tsx
 ├── lib/
-│   └── github.ts
+│   ├── github.ts
+│   └── utils.ts
 ├── types/
 │   └── github.ts
+├── styles/
+│   └── globals.css
 ├── .env.local
 ├── next.config.js
 ├── package.json
+├── tailwind.config.ts
 ├── README.md
 └── tsconfig.json
 ```
