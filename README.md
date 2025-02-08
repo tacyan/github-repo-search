@@ -118,11 +118,11 @@ npm install
 
 ### 3. 環境変数の設定
 
-プロジェクトのルートディレクトリに `.env.local` ファイルを作成し、以下の内容を追加します。
+以下の環境変数を`.env.local`ファイルに設定してください：
 
-```
-NEXT_PUBLIC_GITHUB_API_URL=https://api.github.com
-```
+1. `NEXT_PUBLIC_GITHUB_TOKEN`: GitHubのパーソナルアクセストークン（オプション）
+   - GitHubのAPI制限を緩和するために使用
+   - 設定しない場合は、制限付きの匿名アクセスとなります
 
 ### 4. アプリケーションの起動
 
