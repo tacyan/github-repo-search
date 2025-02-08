@@ -20,7 +20,7 @@ interface RepositoryListProps {
 export function RepositoryList({ repositories, totalCount, currentPage, query, sort, order }: RepositoryListProps) {
   const router = useRouter()
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = async (page: number) => {
     const searchParams = new URLSearchParams({
       q: query,
       page: page.toString(),
@@ -70,7 +70,7 @@ export function RepositoryList({ repositories, totalCount, currentPage, query, s
           sort={sort} 
           order={order}
           totalPages={totalPages}
-          onPageChange={handlePageChange}
+          onPageChangeAction={handlePageChange}
         />
       </div>
     </div>

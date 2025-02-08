@@ -12,10 +12,10 @@ interface PaginationProps {
   sort: string
   order: "asc" | "desc"
   totalPages: number
-  onPageChange: (page: number) => void
+  onPageChangeAction: (page: number) => Promise<void>
 }
 
-export function Pagination({ totalCount, currentPage, query, sort, order, totalPages, onPageChange }: PaginationProps) {
+export function Pagination({ totalCount, currentPage, query, sort, order, totalPages, onPageChangeAction }: PaginationProps) {
   const maxPages = Math.min(totalPages, 34) // GitHub API limits to 1000 results (about 34 pages)
 
   const getPageNumbers = () => {
@@ -66,7 +66,7 @@ export function Pagination({ totalCount, currentPage, query, sort, order, totalP
       <Button
         variant="outline"
         size="icon"
-        onClick={() => onPageChange(currentPage - 1)}
+        onClick={() => onPageChangeAction(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="前のページ"
       >
@@ -80,7 +80,7 @@ export function Pagination({ totalCount, currentPage, query, sort, order, totalP
           <Button
             key={pageNumber}
             variant={currentPage === pageNumber ? "default" : "outline"}
-            onClick={() => onPageChange(Number(pageNumber))}
+            onClick={() => onPageChangeAction(Number(pageNumber))}
             aria-label={`ページ ${pageNumber}`}
             aria-current={currentPage === pageNumber ? "page" : undefined}
           >
@@ -92,7 +92,7 @@ export function Pagination({ totalCount, currentPage, query, sort, order, totalP
       <Button
         variant="outline"
         size="icon"
-        onClick={() => onPageChange(currentPage + 1)}
+        onClick={() => onPageChangeAction(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="次のページ"
       >

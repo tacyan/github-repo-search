@@ -62,7 +62,10 @@ const mockRepositories = [
     owner: {
       login: "user",
       avatar_url: "https://github.com/user.png",
+      html_url: "https://github.com/user",
     },
+    private: false,
+    default_branch: "main",
   },
   {
     id: 2,
@@ -78,7 +81,10 @@ const mockRepositories = [
     owner: {
       login: "user",
       avatar_url: "https://github.com/user.png",
+      html_url: "https://github.com/user",
     },
+    private: false,
+    default_branch: "main",
   },
 ]
 

@@ -7,7 +7,7 @@ import { MarkdownContent } from "@/components/MarkdownContent"
 import { RepositoryDetails } from "@/components/RepositoryDetails"
 import { CardWrapper } from "@/components/CardWrapper"
 import { ContributorCard } from "@/components/ContributorCard"
-import type { Repository } from "@/types/github"
+import type { Repository, Contributor } from "@/types/github"
 
 export default async function RepositoryPage({ params }: { params: { owner: string; name: string } }) {
   const { owner, name } = await Promise.resolve(params);
@@ -38,7 +38,7 @@ export default async function RepositoryPage({ params }: { params: { owner: stri
 
           <CardWrapper title="Contributors" className="mb-8">
             <div className="flex flex-wrap gap-6 p-4">
-              {serializedContributors.slice(0, 10).map((contributor) => (
+              {serializedContributors.slice(0, 10).map((contributor: Contributor) => (
                 <ContributorCard
                   key={contributor.login}
                   login={contributor.login}

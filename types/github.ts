@@ -5,6 +5,7 @@ export interface Repository {
   owner: {
     login: string
     avatar_url: string
+    html_url: string
   }
   description: string
   html_url: string
@@ -13,6 +14,10 @@ export interface Repository {
   forks_count: number
   open_issues_count: number
   language: string
+  private: boolean
+  topics?: string[]
+  homepage?: string
+  default_branch: string
 }
 
 export interface SearchResult {
