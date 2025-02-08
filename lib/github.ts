@@ -98,3 +98,32 @@ export async function getContributors(owner: string, name: string): Promise<Cont
   return res.json()
 }
 
+export async function getSearchSuggestions(query: string): Promise<string[]> {
+  if (!query.trim()) return []
+
+  const searchParams = new URLSearchParams({
+    q: `${query} in:name`,
+    sort: 'stars',
+    per_page: '5',
+  })
+
+  const headers: HeadersInit = {
+    Accept: "application/vnd.github.v3+json",
+  }
+
+  if (process.env.NEXT_PUBLIC_GITHUB_TOKEN) {
+    headers.Authorization = `token ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`
+  }
+
+  const res = await fetch(`${GITHUB_API_URL}/search/repositories?${searchParams}`, {
+    headers,
+  })
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch suggestions")
+  }
+
+  const data = await res.json()
+  return data.items.map((item: any) => item.name)
+}
+
