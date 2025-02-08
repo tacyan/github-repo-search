@@ -99,31 +99,36 @@ export async function getContributors(owner: string, name: string): Promise<Cont
 }
 
 export async function getSearchSuggestions(query: string): Promise<string[]> {
-  if (!query.trim()) return []
+  if (!query) return [];
+  
+  try {
+    const headers: HeadersInit = {
+      Accept: "application/vnd.github.v3+json",
+    }
 
-  const searchParams = new URLSearchParams({
-    q: `${query} in:name`,
-    sort: 'stars',
-    per_page: '5',
-  })
+    if (process.env.NEXT_PUBLIC_GITHUB_TOKEN) {
+      headers.Authorization = `token ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`
+    }
 
-  const headers: HeadersInit = {
-    Accept: "application/vnd.github.v3+json",
+    const res = await fetch(
+      `${GITHUB_API_URL}/search/repositories?q=${encodeURIComponent(query)}&per_page=5`,
+      {
+        headers,
+      }
+    );
+
+    if (!res.ok) {
+      console.error('GitHub API error:', res.status, res.statusText);
+      return []; // エラー時は空の配列を返す
+    }
+
+    const data = await res.json();
+    return data.items
+      .map((item: any) => item.name)
+      .filter((name: string) => name.toLowerCase().includes(query.toLowerCase()));
+  } catch (error) {
+    console.error('Error fetching suggestions:', error);
+    return []; // エラー時は空の配列を返す
   }
-
-  if (process.env.NEXT_PUBLIC_GITHUB_TOKEN) {
-    headers.Authorization = `token ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`
-  }
-
-  const res = await fetch(`${GITHUB_API_URL}/search/repositories?${searchParams}`, {
-    headers,
-  })
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch suggestions")
-  }
-
-  const data = await res.json()
-  return data.items.map((item: any) => item.name)
 }
 

@@ -5,6 +5,7 @@ import { RepositoryList } from "@/components/RepositoryList"
 import { ErrorMessage } from "@/components/ErrorMessage"
 import { SortOptions } from "@/components/SortOptions"
 import { SearchForm } from "@/components/SearchForm"
+import { SearchSuggestions } from "@/components/SearchSuggestions"
 
 interface SearchPageProps {
   searchParams: {
@@ -30,7 +31,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         <Header />
         <main className="flex-grow container mx-auto px-4 py-8">
           <div className="mb-8">
-            <SearchForm initialQuery="" />
+            <SearchForm initialQuery="" isSearchPage={true} />
           </div>
           <ErrorMessage 
             title="No search query" 
@@ -60,28 +61,15 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     const serializedItems = JSON.parse(JSON.stringify(items))
     const serializedTotalCount = JSON.parse(JSON.stringify(total_count))
     
-    // 検索条件の提案を表示するコンポーネント
-    const SearchSuggestions = () => {
-      if (serializedTotalCount <= 1000) return null;
-      
-      return (
-        <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900 rounded-lg max-w-2xl">
-          <h3 className="font-bold mb-2">検索結果を絞り込むためのヒント：</h3>
-          <ul className="list-disc pl-5 space-y-2">
-            <li>言語を指定: language:javascript</li>
-            <li>スター数で絞り込み: stars:&gt;1000</li>
-            <li>より具体的なキーワードを使用</li>
-          </ul>
-        </div>
-      );
-    };
-
     return (
       <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-grow container mx-auto px-4 py-8">
           <div className="mb-8">
-            <SearchForm initialQuery={query} />
+            <SearchForm initialQuery={query} isSearchPage={true} />
+          </div>
+          <div className="mb-8">
+            <SearchSuggestions totalCount={serializedTotalCount} />
           </div>
           {currentPage > totalPages && (
             <div className="mb-4">
@@ -97,7 +85,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             </p>
             <SortOptions currentSort={sort} currentOrder={order} />
           </div>
-          <div className="max-w-full overflow-hidden">
+          <div className="max-w-full overflow-hidden mb-8">
             <RepositoryList 
               repositories={serializedItems}
               totalCount={serializedTotalCount}
@@ -107,9 +95,18 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               order={order}
             />
           </div>
-          <div className="mb-16">
-            <SearchSuggestions />
-          </div>
+          {serializedTotalCount > 1000 && (
+            <div className="mt-12 mb-8 flex justify-center">
+              <div className="p-4 bg-yellow-50 dark:bg-yellow-900 rounded-lg max-w-2xl text-center">
+                <h3 className="font-bold mb-2">検索結果を絞り込むためのヒント：</h3>
+                <ul className="list-none space-y-2">
+                  <li>言語を指定: language:javascript</li>
+                  <li>スター数で絞り込み: stars:&gt;1000</li>
+                  <li>より具体的なキーワードを使用</li>
+                </ul>
+              </div>
+            </div>
+          )}
         </main>
         <Footer />
       </div>
@@ -121,7 +118,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         <Header />
         <main className="flex-grow container mx-auto px-4 py-8">
           <div className="mb-8">
-            <SearchForm initialQuery={query} />
+            <SearchForm initialQuery={query} isSearchPage={true} />
           </div>
           <ErrorMessage 
             title="Error" 
