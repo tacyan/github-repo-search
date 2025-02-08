@@ -29,9 +29,75 @@
 
 ### 前提条件
 
-- Node.js (バージョン 18.17 以上)
-- npm (通常 Node.js とともにインストールされます)
-- Git
+以下のツールが必要です：
+
+#### 1. Node.js のインストール（バージョン 18.17 以上）
+- **Windows の場合**：
+  1. [Node.js 公式サイト](https://nodejs.org/)から LTS バージョンをダウンロード
+  2. ダウンロードしたインストーラーを実行し、画面の指示に従ってインストール
+  3. インストール完了後、コマンドプロンプトを開いて確認：
+     ```bash
+     node --version
+     ```
+
+- **macOS の場合**：
+  1. Homebrewを使用する場合：
+     ```bash
+     brew install node
+     ```
+  2. または[Node.js 公式サイト](https://nodejs.org/)から LTS バージョンをダウンロードしてインストール
+  3. ターミナルを開いて確認：
+     ```bash
+     node --version
+     ```
+
+- **Linux の場合**：
+  ```bash
+  # Ubuntu/Debian の場合
+  curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+  sudo apt-get install -y nodejs
+
+  # バージョン確認
+  node --version
+  ```
+
+#### 2. npm（Node Package Manager）
+- Node.js をインストールすると自動的に npm もインストールされます
+- バージョン確認：
+  ```bash
+  npm --version
+  ```
+
+#### 3. Git のインストール
+- **Windows の場合**：
+  1. [Git for Windows](https://gitforwindows.org/)からインストーラーをダウンロード
+  2. インストーラーを実行し、基本的なオプションを選択してインストール
+
+- **macOS の場合**：
+  1. Homebrewを使用：
+     ```bash
+     brew install git
+     ```
+  2. または Xcode Command Line Tools をインストール：
+     ```bash
+     xcode-select --install
+     ```
+
+- **Linux の場合**：
+  ```bash
+  # Ubuntu/Debian の場合
+  sudo apt-get update
+  sudo apt-get install git
+  ```
+
+- インストール確認：
+  ```bash
+  git --version
+  ```
+
+#### 4. コードエディタ（推奨）
+- [Visual Studio Code](https://code.visualstudio.com/)（推奨）
+- または他のお好みのエディタ
 
 ### 1. リポジトリのクローン
 
