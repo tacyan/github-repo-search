@@ -91,20 +91,22 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               />
             </div>
           )}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <p className="text-sm text-muted-foreground">
               Found {serializedTotalCount.toLocaleString()} repositories
             </p>
             <SortOptions currentSort={sort} currentOrder={order} />
           </div>
-          <RepositoryList 
-            repositories={serializedItems}
-            totalCount={serializedTotalCount}
-            currentPage={pageToFetch}
-            query={query}
-            sort={sort}
-            order={order}
-          />
+          <div className="max-w-full overflow-hidden">
+            <RepositoryList 
+              repositories={serializedItems}
+              totalCount={serializedTotalCount}
+              currentPage={pageToFetch}
+              query={query}
+              sort={sort}
+              order={order}
+            />
+          </div>
           <div className="mb-16">
             <SearchSuggestions />
           </div>

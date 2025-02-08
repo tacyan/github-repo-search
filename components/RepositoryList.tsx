@@ -52,9 +52,9 @@ export function RepositoryList({ repositories, totalCount, currentPage, query, s
                 <p className="text-sm text-gray-500 mb-2 line-clamp-2">{repo.description}</p>
                 <div className="flex items-center gap-2 flex-wrap">
                   <Badge variant="secondary">{repo.language}</Badge>
-                  <div className="flex items-center">
-                    <Star className="w-4 h-4 mr-1" aria-hidden="true" />
-                    <span aria-label={`${repo.stargazers_count} stars`}>{repo.stargazers_count}</span>
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                    <span>{repo.stargazers_count.toLocaleString()}</span>
                   </div>
                 </div>
               </CardContent>
@@ -62,16 +62,36 @@ export function RepositoryList({ repositories, totalCount, currentPage, query, s
           </li>
         ))}
       </ul>
-      <div className="mt-auto py-8">
-        <Pagination 
-          totalCount={totalCount} 
-          currentPage={currentPage} 
-          query={query} 
-          sort={sort} 
-          order={order}
-          totalPages={totalPages}
-          onPageChangeAction={handlePageChange}
-        />
+      <div className="mt-8 flex flex-col items-center gap-4">
+        <div className="flex flex-wrap justify-center gap-2">
+          {/* 1000件制限を考慮したページネーション */}
+          {Array.from({ length: Math.min(Math.ceil(totalCount / 30), 34) }, (_, i) => (
+            <Link
+              key={i + 1}
+              href={{
+                pathname: '/search',
+                query: {
+                  q: query,
+                  page: i + 1,
+                  sort,
+                  order,
+                },
+              }}
+              className={`px-3 py-2 rounded-md ${
+                currentPage === i + 1
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-background hover:bg-muted'
+              }`}
+            >
+              {i + 1}
+            </Link>
+          ))}
+        </div>
+        {totalCount > 1000 && (
+          <p className="text-sm text-muted-foreground">
+            GitHubの制限により最初の1000件のみ表示可能です
+          </p>
+        )}
       </div>
     </div>
   )
