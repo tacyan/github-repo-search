@@ -6,6 +6,7 @@ import { ErrorMessage } from "@/components/ErrorMessage"
 import { SortOptions } from "@/components/SortOptions"
 import { SearchForm } from "@/components/SearchForm"
 import { SearchSuggestions } from "@/components/SearchSuggestions"
+import { getPageErrorMessage } from "@/lib/utils"
 
 interface SearchPageProps {
   searchParams: {
@@ -74,8 +75,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           {currentPage > totalPages && (
             <div className="mb-4">
               <ErrorMessage 
-                title="Notice" 
-                message={`Showing page ${totalPages} (last page) as requested page ${currentPage} exceeds available pages.`}
+                title="お知らせ" 
+                message={getPageErrorMessage(currentPage, totalPages)}
               />
             </div>
           )}
@@ -113,6 +114,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     )
   } catch (error) {
     console.error('Search error:', error)
+    const errorMessage = getPageErrorMessage(currentPage, totalPages)
     return (
       <div className="flex flex-col min-h-screen">
         <Header />
@@ -120,10 +122,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <div className="mb-8">
             <SearchForm initialQuery={query} isSearchPage={true} />
           </div>
-          <ErrorMessage 
-            title="Error" 
-            message="Failed to fetch repositories. Please try again later."
-          />
+          <ErrorMessage>
+            {errorMessage}
+          </ErrorMessage>
         </main>
         <Footer />
       </div>
