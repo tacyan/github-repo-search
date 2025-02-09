@@ -33,7 +33,7 @@ export async function searchRepositories(
       return { total_count: 0, items: [] }
     }
     console.error("Failed to fetch repositories", res.status, res.statusText)
-    return { total_count: 0, items: [] }
+    throw new Error("Failed to fetch repositories")
   }
 
   return res.json()
