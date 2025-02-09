@@ -28,9 +28,12 @@ export const SearchSuggestions = ({ totalCount }: SearchSuggestionsProps) => {
       }
     } else if (filterType === 'stars') {
       const token = filterValue; // 例: "stars:>100"
-      if (!currentQuery.includes(token)) {
-        newQuery = `${currentQuery} ${token}`;
-      }
+      // 既存の stars フィルター（"stars:" で始まる部分）を削除してから新しいフィルターを追加
+      const queryWithoutStars = currentQuery
+        .split(" ")
+        .filter(part => !part.startsWith("stars:"))
+        .join(" ");
+      newQuery = queryWithoutStars ? `${queryWithoutStars} ${token}` : token;
     }
     
     const currentSort = searchParams.get('sort') || 'stars';

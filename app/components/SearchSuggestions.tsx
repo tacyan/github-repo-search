@@ -27,14 +27,18 @@ export default function SearchSuggestions({ totalCount }: SearchSuggestionsProps
 
   const handleSuggestionClick = (suggestion: string) => {
     const searchParams = new URLSearchParams(window.location.search)
-    const currentQuery = searchParams.get("q") || ""
-    
-    // 現在のクエリに言語やスターフィルターを追加
-    const newQuery = currentQuery 
-      ? `${currentQuery} ${suggestion}`
-      : suggestion
+    let currentQuery = searchParams.get("q") || ""
+    let newQuery = ""
 
-    searchParams.set("q", newQuery)
+    if (suggestion.startsWith("stars:")) {
+      // スター数フィルターの場合は、既存のスターズフィルターを削除してから追加
+      currentQuery = currentQuery.split(" ").filter(part => !part.startsWith("stars:")).join(" ")
+      newQuery = currentQuery ? `${currentQuery} ${suggestion}` : suggestion
+    } else {
+      newQuery = currentQuery ? `${currentQuery} ${suggestion}` : suggestion
+    }
+
+    searchParams.set("q", newQuery.trim())
     router.push(`/search?${searchParams.toString()}`)
   }
 
