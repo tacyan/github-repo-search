@@ -116,5 +116,23 @@ describe("RepositoryList", () => {
     expect(screen.getByText("description1")).toBeInTheDocument()
     expect(screen.getByText("description2")).toBeInTheDocument()
   })
+
+  // 新しいテストケース：検索結果が0件の場合のエラーメッセージを確認
+  it("displays error message when no repositories are found", () => {
+    render(
+      <RepositoryList 
+        repositories={[]} 
+        totalCount={0} 
+        currentPage={1}
+        query="nonexistent"
+        sort="stars"
+        order="desc"
+      />
+    )
+    
+    expect(
+      screen.getByText("検索結果が見つかりませんでした。別のキーワードで試してみてください。")
+    ).toBeInTheDocument()
+  })
 })
 

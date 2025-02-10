@@ -37,31 +37,37 @@ export function RepositoryList({ repositories, totalCount, currentPage, query, s
       <p className="mb-4" aria-live="polite">
         Total results: {totalCount}
       </p>
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-8" role="list">
-        {repositories.map((repo) => (
-          <li key={repo.id}>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg sm:text-xl">
-                  <Link href={`/repository/${repo.owner.login}/${repo.name}`} className="hover:underline">
-                    <span aria-label={`Repository: ${repo.name}`}>{repo.name}</span>
-                  </Link>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-500 mb-2 line-clamp-2">{repo.description}</p>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <Badge variant="secondary">{repo.language}</Badge>
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                    <span>{repo.stargazers_count.toLocaleString()}</span>
+      {repositories.length === 0 ? (
+        <div role="alert">
+          検索結果が見つかりませんでした。別のキーワードで試してみてください。
+        </div>
+      ) : (
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-8" role="list">
+          {repositories.map((repo) => (
+            <li key={repo.id}>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg sm:text-xl">
+                    <Link href={`/repository/${repo.owner.login}/${repo.name}`} className="hover:underline">
+                      <span aria-label={`Repository: ${repo.name}`}>{repo.name}</span>
+                    </Link>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-500 mb-2 line-clamp-2">{repo.description}</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Badge variant="secondary">{repo.language}</Badge>
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                      <span>{repo.stargazers_count.toLocaleString()}</span>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </li>
-        ))}
-      </ul>
+                </CardContent>
+              </Card>
+            </li>
+          ))}
+        </ul>
+      )}
       <div className="mt-8 flex flex-col items-center gap-4">
         <div className="flex flex-wrap justify-center gap-2">
           {/* 1000件制限を考慮したページネーション */}
