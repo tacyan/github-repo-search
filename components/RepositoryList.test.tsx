@@ -117,7 +117,7 @@ describe("RepositoryList", () => {
     expect(screen.getByText("description2")).toBeInTheDocument()
   })
 
-  // 新しいテストケース：検索結果が0件の場合のエラーメッセージを確認
+  // 新しいテストケース：検索結果が見つからない場合
   it("該当するリポジトリが見つからない場合にエラーメッセージを表示する", () => {
     render(
       <RepositoryList 
@@ -133,6 +133,35 @@ describe("RepositoryList", () => {
     expect(
       screen.getByText("検索結果が見つかりませんでした。別のキーワードで試してみてください。")
     ).toBeInTheDocument()
+  })
+
+  // --- 追加テストケース：検索結果が1000以上の場合のページネーション ---
+  it("検索結果が1000以上の場合は、ページネーションが34ページしか表示されない", () => {
+    render(
+      <RepositoryList 
+        repositories={mockRepositories} 
+        totalCount={1500} // 1500は1000以上の検索数をシミュレーション
+        currentPage={1}
+        query="test"
+        sort="stars"
+        order="desc"
+      />
+    )
+
+    // 「GitHubの制限により最初の1000件のみ表示可能です」というテキストからページネーション部の親要素を取得
+    const paginationContainer = screen.getByText("GitHubの制限により最初の1000件のみ表示可能です").parentElement
+    expect(paginationContainer).not.toBeNull()
+
+    // paginationContainer 内の全てのページリンク (<a> 要素) を取得
+    const pageLinks = paginationContainer!.querySelectorAll("a")
+
+    // 表示されるページリンクの数が34件であることを検証
+    expect(pageLinks.length).toBe(34)
+
+    // 34というテキストを含み、35というページ番号が存在しないことを追加チェック
+    const pageNumbers = Array.from(pageLinks).map(link => link.textContent)
+    expect(pageNumbers).toContain("34")
+    expect(pageNumbers).not.toContain("35")
   })
 })
 
