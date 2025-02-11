@@ -99,7 +99,7 @@ jest.mock("next/navigation", () => ({
 }))
 
 describe("RepositoryList", () => {
-  it("renders correctly", () => {
+  it("正しくレンダリングされる", () => {
     render(
       <RepositoryList 
         repositories={mockRepositories} 
@@ -118,7 +118,7 @@ describe("RepositoryList", () => {
   })
 
   // 新しいテストケース：検索結果が0件の場合のエラーメッセージを確認
-  it("displays error message when no repositories are found", () => {
+  it("該当するリポジトリが見つからない場合にエラーメッセージを表示する", () => {
     render(
       <RepositoryList 
         repositories={[]} 

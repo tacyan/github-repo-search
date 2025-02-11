@@ -28,13 +28,13 @@ describe("SearchForm", () => {
     pushMock.mockClear();
   });
 
-  it("renders correctly", () => {
+  it("正しくレンダリングされる", () => {
     render(<SearchForm initialQuery="" />)
     expect(screen.getByLabelText("Search repositories")).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Search" })).toBeInTheDocument()
   })
 
-  it("submits the form with the entered query", () => {
+  it("入力されたクエリを送信する", () => {
     // 初期検索クエリが空の場合は mockSearchQuery も空にする
     mockSearchQuery = "";
     render(<SearchForm initialQuery="" />)
@@ -49,7 +49,7 @@ describe("SearchForm", () => {
 
   // --- 追加テストケース：スター数フィルターの後勝ちを検証 ---
 
-  it("applies the last selected star filter (stars:>100 selected after stars:>1000)", async () => {
+  it("最後に入力されたスター数フィルターが適用される（stars:>100 を stars:>1000 の後に入力）", async () => {
     // 初期検索クエリが "react" なので mockSearchQuery も "react" に設定
     mockSearchQuery = "react";
     render(<SearchForm initialQuery="react" />)
@@ -66,7 +66,7 @@ describe("SearchForm", () => {
     expect(decodeURIComponent(pushArg)).toBe("/search?q=react&sort=stars&order=desc")
   })
 
-  it("applies the last selected star filter (stars:>1000 selected after stars:>100)", async () => {
+  it("最後に入力されたスター数フィルターが適用される（stars:>1000 を stars:>100 の後に入力）", async () => {
     // mockSearchQuery = "react";
     render(<SearchForm initialQuery="react" />)
     const input = screen.getByLabelText("Search repositories")
@@ -82,7 +82,7 @@ describe("SearchForm", () => {
     expect(decodeURIComponent(pushArg)).toBe("/search?q=react&sort=stars&order=desc")
   })
 
-  it("applies the last selected star filter regardless of the order (ending with stars:>1000)", async () => {
+  it("順序に関係なく、最後のスター数フィルターが適用される（最後が stars:>1000 で終わる）", async () => {
     // mockSearchQuery = "react";
     render(<SearchForm initialQuery="react" />)
     const input = screen.getByLabelText("Search repositories")

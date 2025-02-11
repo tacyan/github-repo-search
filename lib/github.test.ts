@@ -14,7 +14,7 @@ describe("GitHub API functions", () => {
   })
 
   describe("searchRepositories", () => {
-    it("should fetch repositories successfully", async () => {
+    it("リポジトリを正常に取得できる", async () => {
       const mockResponse = {
         total_count: 1,
         items: [{ id: 1, name: "test-repo" }],
@@ -32,7 +32,7 @@ describe("GitHub API functions", () => {
       )
     })
 
-    it("should throw an error when fetch fails", async () => {
+    it("フェッチに失敗した場合、エラーをスローする", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
       } as Response)
@@ -42,7 +42,7 @@ describe("GitHub API functions", () => {
   })
 
   describe("getRepository", () => {
-    it("should fetch repository details successfully", async () => {
+    it("リポジトリの詳細情報を正常に取得できる", async () => {
       const mockResponse = { id: 1, name: "test-repo", owner: { login: "test-user" } }
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -54,7 +54,7 @@ describe("GitHub API functions", () => {
       expect(global.fetch).toHaveBeenCalledWith("https://api.github.com/repos/test-user/test-repo", expect.any(Object))
     })
 
-    it("should throw an error when fetch fails", async () => {
+    it("フェッチに失敗した場合、エラーをスローする", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
       } as Response)
