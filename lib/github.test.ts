@@ -1,6 +1,10 @@
 import { searchRepositories, getRepository } from "./github"
 import { jest } from "@jest/globals"
 
+beforeAll(() => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+})
+
 const mockFetch = jest.fn() as unknown as jest.MockedFunction<typeof fetch>
 global.fetch = mockFetch
 
