@@ -21,13 +21,22 @@ export const SearchSuggestions = ({ totalCount }: SearchSuggestionsProps) => {
     let newQuery = currentQuery;
 
     if (filterType === 'language') {
-      const token = `language:${filterValue.toLowerCase()}`;
-      // 修正:
-      // currentQuery を空白で分割して、各トークンと完全一致するかどうかを確認する
-      const tokens = currentQuery.trim().split(/\s+/);
-      if (!tokens.some(t => t.toLowerCase() === token)) {
-        newQuery = currentQuery ? `${currentQuery} ${token}` : token;
+      const langToken = `language:${filterValue.toLowerCase()}`;
+      // currentQuery をトークンに分割（空のトークンは除去）
+      const tokens = currentQuery.trim().split(/\s+/).filter(Boolean);
+      // starsフィルターが既にある場合、そのトークンを除去して一時的に保持
+      const starsToken = tokens.find(t => t.startsWith("stars:"));
+      const tokensWithoutStars = tokens.filter(t => !t.startsWith("stars:"));
+
+      // 既存のトークン（starsフィルターを除く）に同じ言語フィルターが無ければ追加
+      if (!tokensWithoutStars.some(t => t.toLowerCase() === langToken)) {
+        tokensWithoutStars.push(langToken);
       }
+
+      // starsフィルターが存在する場合は、必ず末尾に追加
+      if (starsToken) tokensWithoutStars.push(starsToken);
+
+      newQuery = tokensWithoutStars.join(" ");
     } else if (filterType === 'stars') {
       const token = filterValue; // 例: "stars:>100"
       // 既存の stars フィルター（"stars:" で始まる部分）を削除してから新しいフィルターを追加
