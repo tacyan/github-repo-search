@@ -22,9 +22,11 @@ export const SearchSuggestions = ({ totalCount }: SearchSuggestionsProps) => {
 
     if (filterType === 'language') {
       const token = `language:${filterValue.toLowerCase()}`;
-      // 同じキーワードが含まれているかチェック（大文字小文字を区別しない）
-      if (!currentQuery.toLowerCase().includes(token)) {
-        newQuery = `${currentQuery} ${token}`;
+      // 修正:
+      // currentQuery を空白で分割して、各トークンと完全一致するかどうかを確認する
+      const tokens = currentQuery.trim().split(/\s+/);
+      if (!tokens.some(t => t.toLowerCase() === token)) {
+        newQuery = currentQuery ? `${currentQuery} ${token}` : token;
       }
     } else if (filterType === 'stars') {
       const token = filterValue; // 例: "stars:>100"
